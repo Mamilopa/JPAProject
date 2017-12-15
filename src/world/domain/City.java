@@ -1,35 +1,54 @@
 package world.domain;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 @Entity
 public class City implements Serializable {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
    
     private Long id;
-    private String countryCode;
+   
     private String district;
     private String name;
     private Long population;
+    @ManyToOne(cascade=CascadeType.PERSIST)
+    @JoinColumn(name="countrycode")
+   private Country country;
+//    @OneToMany(mappedBy = "city")
+//    private List<Country> countries;
+//    
+
+    public City(String name) {
+        this.name = name;
+    }
+    
 
     public City() {
     }
 
-    public String getCountryCode() {
-        return countryCode;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
+   
+
+   
     public String getDistrict() {
         return district;
     }
@@ -65,9 +84,10 @@ public class City implements Serializable {
 
     @Override
     public String toString() {
-        return "City{" + "id=" + id + ", countryCode=" + countryCode + ", district=" + district + ", name=" + name + ", population=" + population + '}';
+        return "City{" + "id=" + id + ", district=" + district + ", name=" + name + ", population=" + population + ", country=" + country + '}';
     }
 
+   
     
 
   

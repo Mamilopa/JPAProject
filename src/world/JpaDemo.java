@@ -8,7 +8,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import world.domain.City;
-import static world.domain.City_.name;
 import world.domain.Country;
 
 public class JpaDemo {
@@ -16,10 +15,33 @@ public class JpaDemo {
     static EntityManagerFactory factory = Persistence.createEntityManagerFactory("WorldPU");
     static Scanner sc = new Scanner(System.in);
 
-    public static void main(String[] args) {
-//        findCity("Los Angeles");
-//        findCountry("Sweden");
-        menu();
+    public static void main (String[] args) {
+
+Country javae= new Country("JavaLandMissy", "South America", 1L);
+
+javae.setRegion("Eastern");
+javae.setCode("342");
+
+City espressoMissy = new City ("EspressoMissy");
+espressoMissy.setDistrict("Beans");
+espressoMissy.setPopulation(20000L);
+espressoMissy.setCountry(javae);
+
+
+EntityManager em= factory.createEntityManager();
+em.getTransaction().begin();
+em.persist(javae);
+em.getTransaction().commit();
+
+
+//findCity("Los Angeles");
+//        while(true){
+//            System.out.println("What country would you like to find out more about?");
+//        String country =sc.nextLine();
+//        findCountry(country);
+//        }
+//        //    findCountry("Sweden");
+        // menu();
     }
 
     public static void menu() {
@@ -39,12 +61,11 @@ public class JpaDemo {
                 System.out.println("Country not found, please try again");
             }
         } while (loop);
-        
+
         if (loop == false) {
-            System.out.println("Bye");
-                 System.exit(0);
+            System.out.println("Bye, thank you for using the program");
+            System.exit(0);
         }
-   
 
     }
 
@@ -58,9 +79,9 @@ public class JpaDemo {
         List<City> cities = (List<City>) query.getResultList();
 
         System.out.printf("Found %d matches for %s%n", cities.size(), name);
-        for (City c : cities) {
-            System.out.println(c);
-        }
+        cities.forEach((c) -> {
+            System.out.println(c.getName() + " ," + c.getPopulation() + " ," + c.getCountry().getName());
+        });
         em.close();
     }
 
@@ -70,12 +91,25 @@ public class JpaDemo {
         Query query = em.createQuery("SELECT m from Country m where m.name = :name");
         query.setParameter("name", name);
 
-        Country m = (Country) query.getSingleResult();
+        try {
+            Country m = (Country) query.getSingleResult();
 
-        System.out.println(m);
+            System.out.println(m.getName()+"Capital city: "+m.getCapital().getName());
+            System.out.println("The population in "+m.getCapital().getName()+" is "+m.getCapital().getPopulation());
+            System.out.println(m.getName()+" is in "+m.getRegion());
+            System.out.println("The population in "+m.getName()+" is "+ m.getPopulation());
+            System.out.println("Cities in "+ m.getName()+ " are:");
+           
+            
+            
+            m.getCities().forEach((temp) -> {
+                System.out.println(temp.getName());
+            });
+        }catch (Exception e){
+            System.out.println("No such country");
+        }
+            em.close();
 
-        em.close();
-
+        }
     }
-
-}
+ //private List<Country> countries;

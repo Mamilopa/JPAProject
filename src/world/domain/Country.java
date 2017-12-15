@@ -6,10 +6,18 @@
 package world.domain;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -26,9 +34,39 @@ public class Country implements Serializable {
     private String continent;
     private String region;
     private Long population;
+   
+    @OneToOne(cascade=CascadeType.PERSIST)
+    @JoinColumn(name="capital")
+    private City capital;
+    
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
+    private Set<City> cities;
 
+    public Country(String name, String continent, Long population) {
+        this.name = name;
+        this.continent = continent;
+        this.population = population;
+    }
+    
+    
     
     public Country() {
+    }
+
+    public Set<City> getCities() {
+        return cities;
+    }
+
+    public void setCities(Set<City> cities) {
+        this.cities = cities;
+    }
+
+    public City getCapital() {
+        return capital;
+    }
+
+    public void setCapital(City capital) {
+        this.capital = capital;
     }
     
 
@@ -73,12 +111,15 @@ public class Country implements Serializable {
         this.population = population;
     }
 
-   
     @Override
     public String toString() {
-        return "Country{" + "code=" + code + ", name=" + name + ", continent=" + continent + ", region=" + region + ", population=" + population + '}';
+        return "Country{" + "code=" + code + ", name=" + name + ", continent=" + continent + ", region=" + region + ", population=" + population + ", capital=" + capital + ", cities=" + cities + '}';
     }
 
+   
+
+   
+  
    
     
 }
