@@ -66,6 +66,7 @@ em.getTransaction().commit();
             System.out.println("Bye, thank you for using the program");
             System.exit(0);
         }
+        System.out.println("Trying to make a change");
 
     }
 
